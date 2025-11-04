@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Evento Épico</title>
+<style>
+  :root{
+    --bg1:#0b0f19; --bg2:#11182a; --card:#141b2e;
+    --accent:#69a4ff; --muted:#cdd4e0; --glass:rgba(255,255,255,0.04);
+    --glass-2: rgba(255,255,255,0.02);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:Inter, Poppins, sans-serif}
+  html,body{height:100%}
+  body{
+    background: linear-gradient(180deg,var(--bg1),var(--bg2));
+    color:var(--muted); -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* Header */
+  header{
+    text-align:center;padding:3.5rem 1rem;background:
+    radial-gradient(circle at 50% 0%, rgba(105,164,255,0.12), transparent 40%);
+    border-bottom:1px solid rgba(105,164,255,0.07);
+    animation:fadeDown .9s ease both;
+  }
+  header h1{font-size:2.6rem;color:var(--accent);letter-spacing:0.5px}
+  header p{margin-top:.6rem;color:#d5dcf7;font-size:1.05rem;max-width:900px;margin-left:auto;margin-right:auto}
+
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:none}}
+
+  /* top cards */
+  .evento{display:flex;gap:1.6rem;justify-content:center;flex-wrap:wrap;padding:2rem 1rem}
+  .card{
+    width:320px;background:var(--card);border-radius:14px;padding:1.25rem;text-align:center;
+    box-shadow:0 8px 25px rgba(6,9,20,0.6);transform:translateY(0);transition:transform .28s ease, box-shadow .28s;
+    border:1px solid rgba(255,255,255,0.02);
+  }
+  .card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(6,9,20,0.7)}
+  .card img{width:100%;height:180px;object-fit:cover;border-radius:10px}
+  .card h2{color:var(--accent);margin-top:.7rem}
+  .card p{color:#cdd4e0;font-size:.95rem;margin-top:.6rem}
+  .botones{display:flex;gap:.8rem;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+  button.btn{padding:.65rem 1rem;border-radius:8px;border:none;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;transition:transform .18s,background .18s}
+  button.btn.secondary{background:transparent;border:1px solid rgba(105,164,255,0.14)}
+  button.btn:hover{transform:scale(1.04)}
+
+  .resultados{margin-top:.9rem;color:#d5dcf7;font-weight:600}
+
+  /* sections */
+  .section{
+    width:min(1100px,92%);margin:2.2rem auto;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    padding:1.4rem;border-radius:14px;display:flex;gap:1.4rem;align-items:center;box-shadow:0 8px 30px rgba(2,6,23,0.6);
+    animation:fadeUp .9s ease both;
+  }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+  .section img{width:320px;border-radius:12px;box-shadow:0 6px 18px rgba(3,6,20,0.6)}
+  .info{flex:1;min-width:260px}
+  .info h2{color:var(--accent);margin-bottom:.6rem}
+  .info p{color:#d5dcf7;text-align:justify;line-height:1.6}
+
+  /* gallery */
+  .gallery{
+    width:min(1100px,92%);margin:2rem auto;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+    animation:fadeUp .9s ease both;
+  }
+  .thumb{
+    background:var(--card);padding:.5rem;border-radius:12px;overflow:hidden;position:relative;
+    border:1px solid rgba(255,255,255,0.02);
+  }
+  .thumb img{display:block;width:100%;height:160px;object-fit:cover;border-radius:10px;transition:transform .6s cubic-bezier(.2,.9,.2,1)}
+  .thumb:hover img{transform:scale(1.08) rotate(1deg)}
+  .thumb .label{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,0.45);padding:.3rem .5rem;border-radius:8px;color:#fff;font-size:.85rem}
+
+  /* pelea section */
+  .pelea{
+    width:min(1100px,92%);margin:2.4rem auto;padding:2rem;border-radius:12px;background:linear-gradient(180deg,#0f1628,#0b1220);
+    border-top:3px solid var(--accent);text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.7);
+  }
+  .pelea h2{color:var(--accent);font-size:1.9rem;margin-bottom:.6rem}
+  .pelea p{max-width:820px;margin:0 auto;color:#d5dcf7}
+
+  .stats{display:flex;gap:1rem;justify-content:center;margin-top:1.2rem;flex-wrap:wrap}
+  .stat{background:var(--card);padding:1rem;border-radius:10px;width:180px;box-shadow:0 6px 16px rgba(0,0,0,0.5)}
+  .stat h3{color:var(--accent);margin-bottom:.4rem}
+  .stat p{color:#cdd4e0}
+
+  /* results area under botones (center area for global) */
+  .global-results{display:flex;gap:1rem;justify-content:center;margin-top:1rem}
+
+  /* mapa */
+  iframe{width:90%;max-width:900px;height:420px;border:0;border-radius:12px;margin-top:1.2rem;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+
+  /* footer */
+  footer{padding:1.6rem;text-align:center;color:#8894ad;margin-top:2.4rem;border-top:1px solid rgba(255,255,255,0.02)}
+
+  /* modal */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:60}
+  .modal{width:min(720px,95%);background:linear-gradient(180deg,#0f1628,#0b1220);padding:1.2rem;border-radius:12px;border:1px solid rgba(105,164,255,0.08);box-shadow:0 18px 50px rgba(0,0,0,0.7);transform:translateY(20px);opacity:0;transition:all .28s}
+  .modal.open{transform:none;opacity:1}
+  .modal header{display:flex;gap:1rem;align-items:center}
+  .modal header img{width:72px;height:72px;border-radius:8px;object-fit:cover;border:1px solid rgba(255,255,255,0.04)}
+  .modal header h3{color:var(--accent);font-size:1.1rem}
+  .modal form{margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+  .modal label{display:block;font-size:.85rem;color:#cfe0ff;margin-bottom:.3rem}
+  .modal input[type="text"], .modal input[type="email"], .modal select{
+    width:100%;padding:.6rem;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--glass-2);color:var(--muted)
+  }
+  .modal .full{grid-column:1/-1}
+  .modal .actions{display:flex;gap:.6rem;justify-content:flex-end;margin-top:.8rem}
+  .modal .actions button{padding:.6rem .9rem;border-radius:8px;border:none;cursor:pointer}
+  .price{font-weight:800;color:#fff;background:linear-gradient(90deg,#3ae2ff,#6aa7ff);padding:.35rem .6rem;border-radius:8px;display:inline-block}
+
+  /* small responsive */
+  @media (max-width:880px){
+    .section{flex-direction:column}
+    .gallery{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width:520px){
+    .gallery{grid-template-columns:1fr}
+    .card{width:100%}
+    header h1{font-size:1.7rem}
+  }
+
+      .contenedor-videos {
+      display: flex;
+      justify-content: center;
+      gap: 20px; /* espacio entre los videos */
+      flex-wrap: wrap; /* para que se acomoden si la pantalla es pequeña */
+      margin-bottom: 15px;
+    }
+
+    video {
+      width: 400px; /* tamaño de cada video */
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .descripcion {
+      font-size: 18px;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🔥 Evento Épico: Cachudito Shuls vs El patron Carlos Wayer 🔥</h1>
+  <p>Compra tu boleto, vota por tu favorito y prepárate para la batalla más meme del año. (Plantilla lista para editar nombres/imágenes)</p>
+</header>
+
+<!-- TOP CARDS -->
+<div class="evento" id="topCards">
+  <div class="card" id="cardA">
+    <img src="../img/shuls4.jpg" alt="Streamer A principal">
+    <h2>Apoya al Cachudo que va a perder</h2>
+    <p>Rey de los cuernos, no dura nada y un formato impredecible que nunca prende a la audiencia.</p>
+    <div class="botones">
+      <button class="btn" data-action="buy" data-person="A" onclick="openModal('buy','A')">🎟 Comprar</button>
+      <button class="btn secondary" data-action="vote" data-person="A" onclick="openModal('vote','A')">🗳 Votar</button>
+    </div>
+    <div class="resultados" id="resA">Votos: 0</div>
+  </div>
+
+  <div class="card" id="cardB">
+    <img src="../img/Carlos.jpg" alt="Streamer B principal">
+    <h2>El Rey y Patron Carlos Wayer</h2>
+    <p>Frío, calculador y con estilo propio: su calma es su mayor arma en el ring.</p>
+    <div class="botones">
+      <button class="btn" data-action="buy" data-person="B" onclick="openModal('buy','B')">🎟 Comprar</button>
+      <button class="btn secondary" data-action="vote" data-person="B" onclick="openModal('vote','B')">🗳 Votar</button>
+    </div>
+    <div class="resultados" id="resB">Votos: 0</div>
+  </div>
+</div>
+
+<!-- Global results center (just below top controls) -->
+<div class="global-results" id="globalResults">
+  <div class="stat" style="width:auto;padding:.7rem 1rem;">
+    <div style="font-size:.9rem;color:#cdd4e0">Resultados rápidos</div>
+    <div style="margin-top:.45rem;font-weight:800;color:#fff" id="globalText">A: 0 votos  —  B: 0 votos</div>
+  </div>
+</div>
+
+<!-- Gallery: two photos each (animated) -->
+<section class="gallery" aria-label="Galería de participantes">
+  <div class="thumb"><img src="../img/shuls3.jpg" alt=""><div class="label">CACHUDO CABRO</div></div>
+  <div class="thumb"><img src="../img/shuls 2.jpg" alt=""><div class="label">CACHUDO CABRO</div></div>
+  <div class="thumb"><img src="../img/carlos1.png" alt=""><div class="label">REY CARLOS</div></div>
+  <div class="thumb"><img src="../img/carlos2.jpg" alt=""><div class="label">REY CARLOS</div></div>
+</section>
+
+<!-- Descriptions -->
+<section class="section">
+  <div class="info">
+    <h2>Cachudo de Shuls</h2>
+    <p>Desde sus primeras transmisiones, el streamer shuls nuca ganó la atención de su publico: mezcla humor estupido , música para cachudos y cabros, desafíos ede beso de gays  y una interacción directa con la comunidad LGTB. En el ring trae los cuernos bien puestos, ocurrencias que se vuelven virales y una capacidad para convertir cualquier fallo en el mejor meme del día. Sus seguidores valoran lo imbecil que es y esperan que lo viole un burro.</p>
+  </div>
+  <img src="../img/Shulsxd.png" alt="Streamer A detalle">
+</section>
+
+<section class="section">
+  <img src="../img/Carlos.jpg" alt="Streamer B detalle">
+  <div class="info">
+    <h2>El Semi Dios Carlos wayer</h2>
+    <p>Con un enfoque más estratégico, Carlos ha construido su reputación en la consistencia y la calma. Sus directos en tik tok muestran planificación, se cacho a la yuliana y una respuesta fría a las provocaciones del toro shuls. En esta contienda busca imponer ritmo y control, confiando en su experiencia para desmontar el caos. Su estilo más mesurado lo hace peligroso: cuando ataca, lo hace con precisión y reclamara a su hija Aitana ya que John Max Estrada Huaman se la robo y finge ser su padre.</p>
+  </div>
+</section>
+
+<!-- pelea -->
+<div class="pelea" id="pelea">
+  <h2>💥 La Gran Pelea 💥</h2>
+  <p>Un espectáculo único donde humor y estrategia colisionan. ¡Prepárate para sorpresas, invitados y un final que nadie podrá predecir!</p>
+
+  <div class="stats" role="list">
+    <div class="stat" role="listitem"><h3>📅 Fecha</h3><p>14 de Febrero, 2026</p></div>
+    <div class="stat" role="listitem"><h3>📍 Lugar</h3><p>Plaza de Toros de Acho - Lima (en vivo y online)</p></div>
+    <div class="stat" role="listitem"><h3>🏆 Premio</h3><p>Corona del Internet y respeto eterno</p></div>
+  </div>
+
+  <!-- quick vote area -->
+  <div style="margin-top:1.2rem">
+    <div style="display:inline-block;background:var(--card);padding:1rem;border-radius:12px">
+      <div style="font-weight:800;color:#fff;margin-bottom:.6rem">Vota rápido desde aquí</div>
+      <div style="display:flex;gap:.6rem;justify-content:center">
+        <button class="btn" onclick="openModal('vote','A')">🗳 Votar A</button>
+        <button class="btn" onclick="openModal('vote','B')">🗳 Votar B</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- global results repeated under pelea -->
+  <div style="margin-top:1.3rem" id="peleaResults">
+    <div style="color:#d5dcf7;font-weight:700" id="peleaText">A: 0 votos  —  B: 0 votos</div>
+  </div>
+
+  <!-- map -->
+  <iframe loading="lazy" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d249729.9444918649!2d-77.32808520546875!3d-12.041429299999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8b2b8b0d4bd%3A0x35774e363804d19a!2sPlaza%20de%20Toros%20de%20Acho!5e0!3m2!1ses-419!2spe!4v1762211043535!5m2!1ses-419!2spe"></iframe>
+  <p style="margin-top:.9rem;color:#d5dcf7">CACHUDITO los dibujitos ya te reservamos todo un coliseo para ti pero nos equivocamos y la policia ya va por ti SUERTE</p>
+</div>
+
+<footer>© 2025 Evento Digital. Plantilla creada para fines educativos. Edita nombres/imágenes a tu gusto.</footer>
+
+<!-- Modal (backdrop) -->
+<div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+  <div class="modal" id="modalBox" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <header>
+      <img id="modalThumb" src="img/a-thumb.jpg" alt="mini">
+      <div>
+        <h3 id="modalTitle">Formulario</h3>
+        <div style="color:#cdd4e0;font-size:.9rem" id="modalSub">Rellena los datos para comprar o votar</div>
+      </div>
+    </header>
+
+    <form id="modalForm" onsubmit="handleSubmit(event)">
+      <input type="hidden" id="modalMode" value="vote">
+      <input type="hidden" id="modalPerson" value="A">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.9rem">
+        <div>
+          <label for="name">Nombre</label>
+          <input id="name" name="name" type="text" placeholder="Tu nombre" required>
+        </div>
+        <div>
+          <label for="email">Correo</label>
+          <input id="email" name="email" type="email" placeholder="tu@correo.com" required>
+        </div>
+
+        <div>
+          <label for="actionType">Acción</label>
+          <select id="actionType" onchange="onActionChange()" required>
+            <option value="vote">Votar</option>
+            <option value="buy">Comprar boleto</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="who">Votar / Comprar por</label>
+          <select id="who" onchange="onWhoChange()" required>
+            <option value="A">Streamer A</option>
+            <option value="B">Streamer B</option>
+          </select>
+        </div>
+
+        <div id="ticketTypeWrap" style="display:none">
+          <label for="ticketType">Tipo de boleto</label>
+          <select id="ticketType" onchange="updatePrice()">
+            <option value="normal" data-price="10">Normal — S/ 10</option>
+            <option value="vip" data-price="25">VIP — S/ 25</option>
+            <option value="ultra" data-price="40">Ultra Meme — S/ 40</option>
+          </select>
+        </div>
+
+        <div style="display:flex;align-items:end;gap:.6rem">
+          <div style="display:flex;flex-direction:column">
+            <label>Precio</label>
+            <div class="price" id="priceTag">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="full" style="display:flex;gap:.6rem;justify-content:flex-end;margin-top:.9rem">
+        <button type="button" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:.6rem .9rem;border-radius:8px" onclick="closeModal()">Cancelar</button>
+        <button type="submit" style="background:var(--accent);border:none;color:#fff;padding:.6rem .9rem;border-radius:8px">Enviar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Votes state
+  const state = { A:0, B:0 };
+
+  // Modal controls
+  const backdrop = document.getElementById('modalBackdrop');
+  const modal = document.getElementById('modalBox');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalSub = document.getElementById('modalSub');
+  const modalThumb = document.getElementById('modalThumb');
+  const modalModeInput = document.getElementById('modalMode');
+  const modalPersonInput = document.getElementById('modalPerson');
+  const actionType = document.getElementById('actionType');
+  const ticketTypeWrap = document.getElementById('ticketTypeWrap');
+  const ticketType = document.getElementById('ticketType');
+  const priceTag = document.getElementById('priceTag');
+  const whoSelect = document.getElementById('who');
+
+  // open modal with mode 'buy' or 'vote' and person 'A' or 'B'
+  function openModal(mode, person){
+    modalModeInput.value = mode;
+    modalPersonInput.value = person;
+    actionType.value = (mode==='buy') ? 'buy' : 'vote';
+    whoSelect.value = person;
+    ticketTypeWrap.style.display = (mode==='buy') ? 'block' : 'none';
+    updatePrice();
+    // update texts and thumb
+    modalTitle.textContent = (mode==='buy') ? "Comprar Boleto" : "Votar";
+    modalSub.textContent = (mode==='buy') ? "Completa el formulario para comprar y confirmar el pago simulado." : "Rellena los datos para registrar tu voto.";
+    modalThumb.src = (person==='A') ? 'img/a-thumb.jpg' : 'img/b-thumb.jpg';
+    // show
+    backdrop.style.display = 'flex';
+    setTimeout(()=>modal.classList.add('open'),20);
+    backdrop.setAttribute('aria-hidden','false');
+    // focus the first field
+    setTimeout(()=>document.getElementById('name').focus(), 100);
+  }
+
+  function closeModal(){
+    modal.classList.remove('open');
+    backdrop.setAttribute('aria-hidden','true');
+    setTimeout(()=>backdrop.style.display='none',260);
+  }
+
+  // when action select changes
+  function onActionChange(){
+    const val = actionType.value;
+    ticketTypeWrap.style.display = (val==='buy') ? 'block' : 'none';
+    modalModeInput.value = val;
+    updatePrice();
+  }
+
+  // when who changes, update thumb and hidden
+  function onWhoChange(){
+    const who = whoSelect.value;
+    modalPersonInput.value = who;
+    modalThumb.src = (who==='A') ? 'img/a-thumb.jpg' : 'img/b-thumb.jpg';
+  }
+
+  // update price shown (guard against missing ticketType)
+  function updatePrice(){
+    const mode = actionType.value;
+    if(mode==='buy'){
+      if(ticketType && ticketType.options.length>0){
+        const opt = ticketType.options[ticketType.selectedIndex];
+        const price = opt.getAttribute('data-price') || '0';
+        priceTag.textContent = `S/ ${price}.00`;
+      } else {
+        priceTag.textContent = 'S/ 0.00';
+      }
+    } else {
+      priceTag.textContent = 'Gratis (voto)';
+    }
+  }
+
+  // submit handling (no real server) - updates votes if voting or simulates purchase
+  function handleSubmit(e){
+    e.preventDefault();
+    const mode = modalModeInput.value;
+    const person = modalPersonInput.value;
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    if(!name || !email) { alert('Completa nombre y correo'); return; }
+
+    if(mode==='vote'){
+      state[person]++;
+      refreshUI();
+      showToast(`Gracias ${name}. Tu voto por ${(person==='A')?'Streamer A':'Streamer B'} fue registrado.`);
+    } else {
+      let price = '0';
+      if(ticketType && ticketType.options.length>0){
+        const opt = ticketType.options[ticketType.selectedIndex];
+        price = opt.getAttribute('data-price') || '0';
+      }
+      // increment support vote on purchase
+      state[person]++;
+      refreshUI();
+      showToast(`¡Compra simulada! ${name}, pagaste S/ ${price}.00 por ${ (person==='A')?'Streamer A':'Streamer B' }. Revisa tu correo (${email}).`);
+    }
+
+    // close modal and reset
+    setTimeout(closeModal,400);
+    document.getElementById('modalForm').reset();
+    // ensure UI elements reflect reset state
+    onActionChange();
+    updatePrice();
+  }
+
+  // UI refresh
+  function refreshUI(){
+    document.getElementById('resA').textContent = `Votos: ${state.A}`;
+    document.getElementById('resB').textContent = `Votos: ${state.B}`;
+    document.getElementById('globalText').textContent = `A: ${state.A} votos  —  B: ${state.B} votos`;
+    document.getElementById('peleaText').textContent = `A: ${state.A} votos  —  B: ${state.B} votos`;
+  }
+
+  // simple toast (small ephemeral notice)
+  function showToast(msg){
+    const t = document.createElement('div');
+    t.textContent = msg; t.style.position='fixed'; t.style.right='20px'; t.style.bottom='20px';
+    t.style.background='linear-gradient(90deg,#3ae2ff,#6aa7ff)'; t.style.color='#012'; t.style.padding='.7rem 1rem';
+    t.style.borderRadius='10px'; t.style.boxShadow='0 8px 20px rgba(0,0,0,0.5)'; t.style.zIndex=200;
+    document.body.appendChild(t);
+    setTimeout(()=>{ t.style.transition='opacity .5s'; t.style.opacity='0'; },1800);
+    setTimeout(()=>t.remove(),2400);
+  }
+
+  // close modal on backdrop click (but keep if clicking modal)
+  backdrop.addEventListener('click', (ev)=>{
+    if(ev.target === backdrop) closeModal();
+  });
+
+  // keyboard ESC to close
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+
+  // init price
+  updatePrice();
+  refreshUI();
+</script>
+
+<div class="contenedor-videos">
+    <video controls>
+      <source src="../img/video.mp4" type="video/mp4">
+    </video>
+
+    <video controls>
+      <source src="../img/video2.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <p class="descripcion">
+    Shuls te dejo unos videos que te gustaran mucho te lo mando de corazon ojala pierdas la pelea suerte
+  </p>
+
+</body>
+</html>
+
+
